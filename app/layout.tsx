@@ -18,6 +18,9 @@ const spaceGrotesk = localFont({
 export const metadata: Metadata = {
   title: "DevOverflow 15",
   description: "The new version of DevOverflow",
+  icons: {
+    icon: "/images/site-logo.svg",
+  },
 };
 
 export default function RootLayout({
