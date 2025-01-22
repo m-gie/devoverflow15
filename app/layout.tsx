@@ -32,6 +32,11 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+      />
       <SessionProvider session={session}>
         <body
           className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
