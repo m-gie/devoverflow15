@@ -1,6 +1,4 @@
-import { auth, signOut } from "@/auth";
-import { Button } from "@/components/ui/button";
-import ROUTES from "@/constants/routes";
+import { auth } from "@/auth";
 
 const Home = async () => {
   const session = await auth();
@@ -10,7 +8,7 @@ const Home = async () => {
       <div className="text-3xl font-black ">Hello!</div>
       <div className="font-space-grotesk text-3xl ">Hello!</div>
 
-      <form
+      {/* <form
         className="px-10 pt-[100px]"
         action={async () => {
           "use server";
@@ -18,7 +16,7 @@ const Home = async () => {
         }}
       >
         <Button type="submit"> Log Out</Button>
-      </form>
+      </form> */}
     </div>
   );
 };
