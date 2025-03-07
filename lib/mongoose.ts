@@ -1,6 +1,6 @@
 import mongoose, { Mongoose } from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/test";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error("MongoDB connection string is required");
@@ -23,10 +23,13 @@ if (!cached) {
 }
 
 const dbConnect = async (): Promise<Mongoose> => {
+  console.log("starting connection to DB");
   if (cached.connection) {
+    console.log("using cached connection");
     return cached.connection;
   }
   if (!cached.promise) {
+    console.log("creating new connection");
     cached.promise = mongoose
       .connect(MONGODB_URI, {
         dbName: "devflow15",
