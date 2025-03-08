@@ -1,10 +1,12 @@
 import User from "@/database/user.model";
+import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { email } = await request.json();
   try {
+    await dbConnect();
     const validatedData = UserSchema.partial().safeParse({ email });
     if (!validatedData.success) {
       return NextResponse.json(

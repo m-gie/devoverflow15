@@ -1,10 +1,12 @@
 import Account from "@/database/user.model";
+import dbConnect from "@/lib/mongoose";
 import { UserSchema as AccountSchema } from "@/lib/validations";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const { providerAccountId } = await request.json();
   try {
+    await dbConnect();
     const validatedData = AccountSchema.partial().safeParse({
       providerAccountId,
     });
