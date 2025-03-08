@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     let existingUser = await User.findOne({ email }).session(session);
     if (!existingUser) {
       [existingUser] = await User.create(
-        [{ name, slugifiedUsername, email, image }],
+        [{ name, username: slugifiedUsername, email, image }],
         { session }
       );
     } else {
