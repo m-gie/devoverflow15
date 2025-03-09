@@ -9,7 +9,7 @@ import User from "@/database/user.model";
 
 import action from "../handlers/action";
 
-import { SignUpSchema } from "../validations";
+import { SignInSchema, SignUpSchema } from "../validations";
 
 export async function signUpWithCredentials(
   params: AuthCredentials
@@ -72,5 +72,43 @@ export async function signUpWithCredentials(
     }
   } finally {
     await session.endSession();
+  }
+}
+
+export async function signInWithCredentials(
+  params: Pick<AuthCredentials, "email" | "password">
+): Promise<ActionResponse> {
+  const validationResult = await action({ params, schema: SignInSchema });
+
+  if (validationResult instanceof Error) {
+    throw new Error(validationResult.message);
+  }
+
+  const { email, password } = validationResult.params!;
+
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) throw new Error("User does not exist");
+
+    const existingAccount = await Account.findOne({
+      provider: "credentials",
+      providerAccountId: email,
+    });
+
+    if (!existingAccount) throw new Error("Account does not exist");
+
+    const passwordMatch = await bcrypt.compare(
+      password,
+      existingAccount.password
+    );
+
+    if (!passwordMatch) throw new Error("Password does not match");
+
+    await signIn("credentials", { email, password, redirect: false });
+
+    return { success: true };
+  } catch (error) {
+    throw new Error(error.message);
   }
 }
