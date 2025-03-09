@@ -1,3 +1,5 @@
+import { RequestError } from "../http-errors";
+
 interface FetchOptions extends RequestInit {
   timeout?: number;
 }
@@ -11,7 +13,7 @@ export async function fetchHandler<T>(
   options: FetchOptions = {}
 ): Promise<ActionResponse<T>> {
   const {
-    timeout = 5000,
+    timeout = 100000,
     headers: customHeaders = {},
     ...restOptions
   } = options;
@@ -25,7 +27,6 @@ export async function fetchHandler<T>(
   };
 
   const headers: HeadersInit = { ...defaultHeaders, ...customHeaders };
-
   const config: RequestInit = {
     ...restOptions,
     headers,
@@ -34,19 +35,23 @@ export async function fetchHandler<T>(
 
   try {
     const response = await fetch(url, config);
+
     clearTimeout(id);
+
     if (!response.ok) {
-      const error = new Error(response.statusText);
-      return { success: false, error, status: response.status };
+      throw new RequestError(response.status, `HTTP error: ${response.status}`);
     }
+
     return await response.json();
   } catch (err) {
     const error = isError(err) ? err : new Error("Unknown error");
+
     if (error.name === "AbortError") {
-      console.error("Request timed out", { url, timeout });
+      console.error("Request timed out");
     } else {
-      console.error("Error fetching data", { url, error });
+      console.error(error.message);
     }
+
     return { success: false, error: { message: error.message } };
   }
 }

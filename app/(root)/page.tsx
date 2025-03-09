@@ -7,6 +7,7 @@ const Home = async () => {
     <div>
       <div className="text-3xl font-black ">Hello!</div>
       <div className="font-space-grotesk text-3xl ">Hello!</div>
+      <div className="text-3xl ">{session?.user?.name}</div>
 
       {/* <form
         className="px-10 pt-[100px]"
